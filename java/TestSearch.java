@@ -1,6 +1,6 @@
 public class TestSearch {
     // configurator
-    private static int size = 10;  // size of each hash level
+    private static int size = 32;  // size of each hash level
     private static int depth = 10000000; // number of hash levels
     private static int threads = 0; // 0 - main thread only / n - n threads
     private static int entry_i = 0;
