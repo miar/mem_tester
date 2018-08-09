@@ -1,7 +1,7 @@
 public class Hash {
-    private int size;  // size of each hash level
-    private int middle;
-    private int depth; // number of hash levels 
+    private static int size;  // size of each hash level
+    private static int middle;
+    private static int depth; // number of hash levels 
     private static Object[] root;
     
     Hash(int size, int depth) {
@@ -22,7 +22,7 @@ public class Hash {
 	// last hash entries remain with 'null' values 
     }
 
-    void check_first_entry() {
+    /*    void check_first_entry() {
 	Object[] curr_hash = root;
 	for (int d = 1; d < depth; d++)
 	    curr_hash = curr_hash[0];	
@@ -37,7 +37,12 @@ public class Hash {
     void check_last_entry() {
 	Object[] curr_hash = root;
 	for (int d = 1; d < depth; d++)
-	    curr_hash = curr_hash[size -1];	
+	    curr_hash = curr_hash[size - 1];	
     }
-
+    */
+    void check_entry(int i) {
+	Object[] curr_hash = root;
+	for (int d = 1; d < depth; d++)
+	    curr_hash = curr_hash[i];	
+    }
 }
