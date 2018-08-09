@@ -41,8 +41,10 @@ public class Hash {
     }
     */
     void check_entry(int i) {
-	Object[] curr_hash = root;
-	for (int d = 1; d < depth; d++)
-	    curr_hash = curr_hash[i];	
+	Object[] curr_hash = root;	
+	for (int d = 0; d < depth; d++) {
+	    Object h = curr_hash[i];
+	    curr_hash = (Object []) h;
+	}
     }
 }
