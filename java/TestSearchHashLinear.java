@@ -120,8 +120,6 @@ public class TestSearchHashLinear {
 			@Override
 			public void run() {
 			     check_one_touch(hash, tid);
-			    //System.out.println("aaaaa...");
-			    
 			}
 		    });	   
 		
