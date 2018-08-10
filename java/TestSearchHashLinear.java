@@ -4,14 +4,14 @@ public class TestSearchHashLinear {
     // configurator
     private static int size = 8;  // size of each hash level
     private static int depth = 2000000; // number of hash levels
-    private static int threads = 0; // 0 - main thread only / n - n threads
-    private static int entry_i = 0;
+    private static int threads = 0; // 0 - main thread only |  n - n threads
     private static int runs = 1;
+    private static int first_touch = 0;
     private static int second_touch = 7; 
     
     public static void main(final String[] args) {
 	System.out.println("time (setup)");
-	HashLinear hash = new HashLinear(size, depth, second_touch); 
+	HashLinear hash = new HashLinear(size, depth); 
 	if (threads == 0)
 	    //	    runSingleThreadOneTouch(hash);
 	runSingleThreadTwoTouch(hash);	
@@ -22,14 +22,14 @@ public class TestSearchHashLinear {
     private static void runSingleThreadOneTouch(HashLinear hash) {
 	System.out.println("time (run)");
 	long start =  System.nanoTime();
-	hash.check_entry_one_touch(entry_i);
+	hash.check_entry_one_touch(first_touch);
 	long end = System.nanoTime();
 	long time = (end - start) / 1000000L;
 	long avg_first_time = time;
 	long avg_second_time = 0;
 	for (int r = 1; r < runs; r++) {
 	    start =  System.nanoTime();
-	    hash.check_entry_one_touch(entry_i);
+	    hash.check_entry_one_touch(first_touch);
 	    end = System.nanoTime();
 	    time = (end - start) / 1000000L;
 	    avg_first_time += time;
@@ -52,14 +52,14 @@ public class TestSearchHashLinear {
     private static void runSingleThreadTwoTouch(HashLinear hash) {
 	System.out.println("time (run)");
 	long start =  System.nanoTime();
-	hash.check_entry_two_touch(entry_i, second_touch);
+	hash.check_entry_two_touch(first_touch, second_touch);
 	long end = System.nanoTime();
 	long time = (end - start) / 1000000L;
 	long avg_first_time = time;
 	long avg_second_time = 0;
 	for (int r = 1; r < runs; r++) {
 	    start =  System.nanoTime();
-	    hash.check_entry_two_touch(entry_i, second_touch);
+	    hash.check_entry_two_touch(first_touch, second_touch);
 	    end = System.nanoTime();
 	    time = (end - start) / 1000000L;
 	    avg_first_time += time;
