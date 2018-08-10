@@ -2,12 +2,12 @@
 
 public class TestSearchHashLinear {
     // configurator
-    private static int size = 64;  // size of each hash level
-    private static int depth = 1000000; // number of hash levels
+    private static int size = 8;  // size of each hash level
+    private static int depth = 2000000; // number of hash levels
     private static int threads = 0; // 0 - main thread only / n - n threads
     private static int entry_i = 0;
     private static int runs = 1;
-    private static int second_touch = 48; 
+    private static int second_touch = 7; 
     
     public static void main(final String[] args) {
 	System.out.println("time (setup)");
@@ -74,11 +74,13 @@ public class TestSearchHashLinear {
 	else
 	    System.out.println("Main - Avg without first Run Time = "
 			       + avg_second_time / runs + " ms");
-
-
     }
-
-
-
-    
 }
+/* 
+machine laptop (two touch):
+    2000000:
+       first run: 107
+       2nd run: 0
+    3000000:
+       out of memory
+*/

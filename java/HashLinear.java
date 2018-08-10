@@ -6,18 +6,19 @@ public class HashLinear {
     private static Object[] root;
     private static int second_touch;
     
-	HashLinear(int size, int depth, int second_touch) {
-	root = new Object[size];
-	if (second_touch > size - 1)
-	    this.second_touch = size -1;
+    HashLinear(int size, int depth, int second_touch) {
+	this.root = new Object[size];
+	this.size = size;
+	this.depth = depth;
+	if (second_touch > (size - 1))
+	    this.second_touch = size - 1;
 	else
 	    this.second_touch = second_touch;
-      
 	Object[] curr_hash = root;
-		
+	
 	for (int d = 1; d < depth; d++) {
 	    Object[] next_hash = new Object[size];
-	    for (int s = 0; s < size - 1; s++)
+	    for (int s = 0; s < size; s++)
 		curr_hash[s] = next_hash;
 	    curr_hash = next_hash;   
 	}
@@ -38,12 +39,10 @@ public class HashLinear {
 	Object[] curr_hash = root;	
 	for (int d = 0; d < depth; d++) {
 	    // first touch
-	    Object h = curr_hash[i];
-	    h = curr_hash[i];
+	    //System.out.println(curr_hash);
+	    Object h = curr_hash[i];	    
 	    h = curr_hash[second_touch];
 	    curr_hash = (Object []) h;
 	}
-    }
-
-    
+    }   
 }
