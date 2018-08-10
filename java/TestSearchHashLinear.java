@@ -4,13 +4,14 @@ import java.util.Random;
 public class TestSearchHashLinear {
     // configurator
     private static int size = 8;  // size of each hash level
-    private static int depth = 20; // number of hash levels
-    private static int threads = 0; // 0 - main thread only |  n - n threads
+    private static int depth = 200000; // number of hash levels
+    private static int threads = 2; // 0 - main thread only |  n - n threads
+    private static int n_datasets = 2;
     private static int runs = 1;
     private static int first_touch = 0;
     private static int second_touch = size - 1;
     private static int dataset[][];
-    private static int n_datasets = 1;
+
     private static int touches = 1; // 1 - one touch | 2 - two touches
     
     public static void main(final String[] args) {
@@ -25,9 +26,11 @@ public class TestSearchHashLinear {
 		runSingleThreadOneTouch(hash, 0);
 	    else
 		runSingleThreadTwoTouch(hash, 0);	
-	//	else
-	//    runMultiThread(hash);
+	else
+	    runMultiThread(hash);
+
     }
+    
 
     private static void createDataset() {	
 	dataset = new int[n_datasets][depth];
@@ -41,20 +44,25 @@ public class TestSearchHashLinear {
     }
 
     private static void check_one_touch(HashLinear hash, int thr) {
-	if(thr == 0 || thr == 1)
-	    for (int ds = 0; ds < n_datasets; ds++) 
-		hash.check_entry_one_touch(ds, dataset);
-	else
-	    hash.check_entry_one_touch(thr, dataset);
+	for (int ds = 0; ds < n_datasets; ds++) 
+	    hash.check_entry_one_touch(ds, dataset);
     }
 
-    private static void check_two_touch(HashLinear hash, int thr) {
-	if(thr == 0 || thr == 1)
-	    for (int ds = 0; ds < n_datasets; ds++) 
-		hash.check_entry_two_touch(ds, dataset, second_touch);
-	else
-	    hash.check_entry_two_touch(thr, dataset, second_touch);	
+
+    private static void check_one_touch_mt(HashLinear hash, int thr) {
+	hash.check_entry_one_touch(thr, dataset);
     }
+
+
+    private static void check_two_touch(HashLinear hash, int thr) {
+	for (int ds = 0; ds < n_datasets; ds++) 
+	    hash.check_entry_two_touch(ds, dataset, second_touch);
+    }
+
+    private static void check_two_touch_mt(HashLinear hash, int thr) {
+	hash.check_entry_two_touch(thr, dataset, second_touch);	
+    }
+
     
     private static void runSingleThreadOneTouch(HashLinear hash, int thr) {
 	long start =  System.nanoTime();
@@ -106,5 +114,94 @@ public class TestSearchHashLinear {
 	    System.out.println("Main - Avg without first Run Time = "
 			       + avg_second_time / runs + " ms");
     }
+
+    private static void runMultiThread(HashLinear hash){
+	Thread thr_arr[] = new Thread[threads];
+
+	if (threads == 1) {
+	    final int tid = 0;
+	    if (touches == 1) {
+		thr_arr[0] = new Thread(new Runnable() {
+			@Override
+			public void run() {
+			    check_one_touch(hash, tid);
+			}
+		    });
+	    } else {
+		thr_arr[0] = new Thread(new Runnable() {
+			@Override
+			public void run() {
+			    check_two_touch(hash, tid);
+			}
+		    });				
+	    }	    
+	} else {
+	    if (touches == 1) {
+		for (int t = 0; t < threads; t++) {
+		    final int tid = t;
+		    thr_arr[t] = new Thread(new Runnable() {
+			    @Override
+			    public void run() {
+				check_one_touch_mt(hash, tid);
+			    }
+			});
+		}
+	    } else {
+		for (int t = 0; t < threads; t++) {
+		    final int tid = t;
+		    thr_arr[t] = new Thread(new Runnable() {
+			    @Override
+			    public void run() {
+				check_two_touch_mt(hash, tid);
+			    }
+			});
+		}
+	    }
+	}
+	
+	
+	long start =  System.nanoTime();
+	
+	for (int t = 0; t < threads; t++)
+	    thr_arr[t].start();
+	
+	for (int t = 0; t < threads; t++)
+	    try{
+		thr_arr[t].join();
+	    } catch(InterruptedException e){
+		System.out.println(e);
+	    }
+
+	long end = System.nanoTime();
+	long time = (end - start) / 1000000L;
+	long avg_first_time = time;
+	long avg_second_time = 0;
+	for (int r = 1; r < runs; r++) {
+	    start =  System.nanoTime();
+	    for (int t = 0; t < threads; t++)
+		thr_arr[t].start();
+	    
+	    for (int t = 0; t < threads; t++)
+		try{
+		    thr_arr[t].join();
+		} catch(InterruptedException e){
+		    System.out.println(e);
+		}
+	    end = System.nanoTime();
+	    time = (end - start) / 1000000L;
+	    avg_first_time += time;
+	    avg_second_time += time;
+	}
+	System.out.println("Threads - First Run Time = " + time + " ms");
+	if (runs > 1)
+	    System.out.println("Threads - Avg without first Run Time = "
+			       + avg_second_time / (runs - 1) + " ms");
+	else
+	    System.out.println("Threads - Avg without first Run Time = "
+			       + avg_second_time / runs + " ms");
+
+    }
+
+    
 }
 
