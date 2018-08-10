@@ -2,8 +2,8 @@ import java.util.Random;
 
 public class TestSearchHashLinear {
     // configurator
-    private static int size = 8;  // size of each hash level
-    private static int depth = 100000; // number of hash levels
+    private static int size = 16;  // size of each hash level
+    private static int depth = 2000000; // number of hash levels
     private static int threads = 4; // 0 - main thread only |  n - n threads
     private static int n_datasets = 4; // must be equal to threads if threads > 1
     private static int runs = 5;
@@ -161,6 +161,8 @@ public class TestSearchHashLinear {
     
     
     private static void runMultiThread(HashLinear hash){
+	// run multi thread
+
 	Thread thr_arr[] = new Thread[threads];
 
 	InitThreads(hash, thr_arr);
@@ -206,7 +208,13 @@ public class TestSearchHashLinear {
 	if (runs > 1)
 	    System.out.println("Threads " + threads + " - Avg without first Run Time = "
 			       + avg_second_time / (runs - 1) + " ms");
-    }
-  
+
+	// run single thread
+	if (touches == 1)
+	    runSingleThreadOneTouch(hash, 0);
+	else
+	    runSingleThreadTwoTouch(hash, 0);	
+
+    } 
 }
 
