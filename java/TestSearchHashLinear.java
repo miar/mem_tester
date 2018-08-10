@@ -22,9 +22,9 @@ public class TestSearchHashLinear {
 	System.out.println("running tests");
 	if (threads == 0)
 	    if (touches == 1)
-		runSingleThreadOneTouch(hash);
+		runSingleThreadOneTouch(hash, 0);
 	    else
-		runSingleThreadTwoTouch(hash);	
+		runSingleThreadTwoTouch(hash, 0);	
 	//	else
 	//    runMultiThread(hash);
     }
@@ -37,32 +37,35 @@ public class TestSearchHashLinear {
 	    for (int d = 0; d < depth; d++) {
 		dataset[ds][d] = (int)(randomGenerator.nextDouble()*((size - 2) - 0)); // size - 2 because of second touch
 		//System.out.println(dataset[ds][d]);
-	    }
-	
+	    }	
     }
 
-    private static void check_one_touch(HashLinear hash) {
-	for (int ds = 0; ds < n_datasets; ds++) 
-	    hash.check_entry_one_touch(ds, dataset);	    
+    private static void check_one_touch(HashLinear hash, int thr) {
+	if(thr == 0 || thr == 1)
+	    for (int ds = 0; ds < n_datasets; ds++) 
+		hash.check_entry_one_touch(ds, dataset);
+	else
+	    hash.check_entry_one_touch(thr, dataset);
     }
 
-    private static void check_two_touch(HashLinear hash) {
-	for (int ds = 0; ds < n_datasets; ds++) 
-	    hash.check_entry_two_touch(ds, dataset, second_touch);	    
+    private static void check_two_touch(HashLinear hash, int thr) {
+	if(thr == 0 || thr == 1)
+	    for (int ds = 0; ds < n_datasets; ds++) 
+		hash.check_entry_two_touch(ds, dataset, second_touch);
+	else
+	    hash.check_entry_two_touch(thr, dataset, second_touch);	
     }
-
     
-    private static void runSingleThreadOneTouch(HashLinear hash) {
-	System.out.println("time (run)");
+    private static void runSingleThreadOneTouch(HashLinear hash, int thr) {
 	long start =  System.nanoTime();
-	check_one_touch(hash);
+	check_one_touch(hash, thr);
 	long end = System.nanoTime();
 	long time = (end - start) / 1000000L;
 	long avg_first_time = time;
 	long avg_second_time = 0;
 	for (int r = 1; r < runs; r++) {
 	    start =  System.nanoTime();	    
-	    check_one_touch(hash);
+	    check_one_touch(hash, thr);
 	    end = System.nanoTime();
 	    time = (end - start) / 1000000L;
 	    avg_first_time += time;
@@ -70,10 +73,8 @@ public class TestSearchHashLinear {
 	}
 
 	System.out.println("Main - First Run Time = " + time + " ms");
-
 	System.out.println("Main - Avg with first Run Time = " 
 			 +  avg_first_time /runs + " ms");
-
 	if (runs > 1)
 	    System.out.println("Main - Avg without first Run Time = "
 			       + avg_second_time / (runs - 1) + " ms");
@@ -82,17 +83,16 @@ public class TestSearchHashLinear {
 			       + avg_second_time / runs + " ms");
     }
 
-    private static void runSingleThreadTwoTouch(HashLinear hash) {
-	System.out.println("time (run)");
+    private static void runSingleThreadTwoTouch(HashLinear hash, int thr) {
 	long start =  System.nanoTime();
-	check_two_touch(hash);
+	check_two_touch(hash, thr);
 	long end = System.nanoTime();
 	long time = (end - start) / 1000000L;
 	long avg_first_time = time;
 	long avg_second_time = 0;
 	for (int r = 1; r < runs; r++) {
 	    start =  System.nanoTime();
-	    check_two_touch(hash);
+	    check_two_touch(hash, thr);
 	    end = System.nanoTime();
 	    time = (end - start) / 1000000L;
 	    avg_first_time += time;
