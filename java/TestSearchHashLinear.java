@@ -5,7 +5,7 @@ public class TestSearchHashLinear {
     private static int size = 8;  // size of each hash level
     private static int depth = 100000; // number of hash levels
     private static int threads = 1; // 0 - main thread only |  n - n threads
-    private static int n_datasets = 1;
+    private static int n_datasets = 2; // must be equal to threads if threads > 1
     private static int runs = 5;
     private static int second_touch = size - 1;
     private static int dataset[][];
@@ -112,21 +112,19 @@ public class TestSearchHashLinear {
 
     }
 
-    private static void runMultiThread(HashLinear hash){
-	Thread thr_arr[] = new Thread[threads];
-
+    private static void InitThreads(HashLinear hash, Thread thr_arr[]) {
 	if (threads == 1) {
 	    final int tid = 0;
 	    if (touches == 1) {
 		thr_arr[0] = new Thread(new Runnable() {
 			@Override
 			public void run() {
-			    // check_one_touch(hash, tid);
-			    System.out.println("aaaaa...");
-	
+			     check_one_touch(hash, tid);
+			    //System.out.println("aaaaa...");
+			    
 			}
 		    });	   
-	
+		
 	    } else {
 		thr_arr[0] = new Thread(new Runnable() {
 			@Override
@@ -158,8 +156,15 @@ public class TestSearchHashLinear {
 		}
 	    }
 	}
+    }
+    
+    
+    
+    private static void runMultiThread(HashLinear hash){
+	Thread thr_arr[] = new Thread[threads];
 
-	
+	InitThreads(hash, thr_arr);
+		
 	long start =  System.nanoTime();
 	
 	for (int t = 0; t < threads; t++)
@@ -178,8 +183,8 @@ public class TestSearchHashLinear {
 	long avg_first_time = first_time;
 	long avg_second_time = 0;
 	for (int r = 1; r < runs; r++) {
+	    InitThreads(hash, thr_arr);
 	    start =  System.nanoTime();
-	    /*
 	    for (int t = 0; t < threads; t++)
 		thr_arr[t].start();
 	    
@@ -189,7 +194,6 @@ public class TestSearchHashLinear {
 		} catch(InterruptedException e){
 		    System.out.println(e);
 		}
-	    */
 	    end = System.nanoTime();
 	    long time = (end - start) / 1000000L;
 	    avg_first_time += time;
