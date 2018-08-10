@@ -171,7 +171,6 @@ public class TestSearchHashLinear {
 	
 	for (int t = 0; t < threads; t++)
 	    thr_arr[t].start();
-
 	
 	for (int t = 0; t < threads; t++)
 	    try{
