@@ -1,6 +1,5 @@
 import java.util.Random;
 
-
 public class TestSearchHashLinear {
     // configurator
     private static int size = 8;  // size of each hash level
@@ -201,7 +200,6 @@ public class TestSearchHashLinear {
 			       + avg_second_time / runs + " ms");
 
     }
-
-    
+  
 }
 
