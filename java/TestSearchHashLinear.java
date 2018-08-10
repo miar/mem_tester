@@ -1,13 +1,13 @@
 import java.util.Random;
 
+
 public class TestSearchHashLinear {
     // configurator
     private static int size = 8;  // size of each hash level
     private static int depth = 200000; // number of hash levels
-    private static int threads = 2; // 0 - main thread only |  n - n threads
+    private static int threads = 0; // 0 - main thread only |  n - n threads
     private static int n_datasets = 2;
-    private static int runs = 1;
-    private static int first_touch = 0;
+    private static int runs = 5;
     private static int second_touch = size - 1;
     private static int dataset[][];
 
@@ -67,51 +67,50 @@ public class TestSearchHashLinear {
 	long start =  System.nanoTime();
 	check_one_touch(hash, thr);
 	long end = System.nanoTime();
-	long time = (end - start) / 1000000L;
-	long avg_first_time = time;
+	long first_time = (end - start) / 1000000L;
+	long avg_first_time = first_time;
 	long avg_second_time = 0;
 	for (int r = 1; r < runs; r++) {
 	    start =  System.nanoTime();	    
 	    check_one_touch(hash, thr);
 	    end = System.nanoTime();
-	    time = (end - start) / 1000000L;
+	    long time = (end - start) / 1000000L;
 	    avg_first_time += time;
 	    avg_second_time += time;
 	}
 
-	System.out.println("Main - First Run Time = " + time + " ms");
-	System.out.println("Main - Avg with first Run Time = " 
+	System.out.println("Main - First Run Time = " + first_time + " ms");
+	System.out.println("Main - Avg with First Run Time = " 
 			 +  avg_first_time /runs + " ms");
+
 	if (runs > 1)
 	    System.out.println("Main - Avg without first Run Time = "
 			       + avg_second_time / (runs - 1) + " ms");
-	else
-	    System.out.println("Main - Avg without first Run Time = "
-			       + avg_second_time / runs + " ms");
     }
 
     private static void runSingleThreadTwoTouch(HashLinear hash, int thr) {
 	long start =  System.nanoTime();
 	check_two_touch(hash, thr);
 	long end = System.nanoTime();
-	long time = (end - start) / 1000000L;
-	long avg_first_time = time;
+	long first_time = (end - start) / 1000000L;
+	long avg_first_time = first_time;
 	long avg_second_time = 0;
 	for (int r = 1; r < runs; r++) {
 	    start =  System.nanoTime();
 	    check_two_touch(hash, thr);
 	    end = System.nanoTime();
-	    time = (end - start) / 1000000L;
+	    long time = (end - start) / 1000000L;
 	    avg_first_time += time;
 	    avg_second_time += time;
 	}
-	System.out.println("Main - First Run Time = " + time + " ms");
+
+	System.out.println("Main - First Run Time = " + first_time + " ms");
+	System.out.println("Main - Avg with First Run Time = " 
+			 +  avg_first_time /runs + " ms");
 	if (runs > 1)
 	    System.out.println("Main - Avg without first Run Time = "
 			       + avg_second_time / (runs - 1) + " ms");
-	else
-	    System.out.println("Main - Avg without first Run Time = "
-			       + avg_second_time / runs + " ms");
+
     }
 
     private static void runMultiThread(HashLinear hash){
@@ -172,8 +171,8 @@ public class TestSearchHashLinear {
 	    }
 
 	long end = System.nanoTime();
-	long time = (end - start) / 1000000L;
-	long avg_first_time = time;
+	long first_time = (end - start) / 1000000L;
+	long avg_first_time = first_time;
 	long avg_second_time = 0;
 	for (int r = 1; r < runs; r++) {
 	    start =  System.nanoTime();
@@ -187,18 +186,17 @@ public class TestSearchHashLinear {
 		    System.out.println(e);
 		}
 	    end = System.nanoTime();
-	    time = (end - start) / 1000000L;
+	    long time = (end - start) / 1000000L;
 	    avg_first_time += time;
 	    avg_second_time += time;
 	}
-	System.out.println("Threads - First Run Time = " + time + " ms");
-	if (runs > 1)
-	    System.out.println("Threads - Avg without first Run Time = "
-			       + avg_second_time / (runs - 1) + " ms");
-	else
-	    System.out.println("Threads - Avg without first Run Time = "
-			       + avg_second_time / runs + " ms");
 
+	System.out.println("Threads " + threads + " - First Run Time = " + first_time + " ms");
+	System.out.println("Threads " + threads + " - Avg with First Run Time = " 
+			 +  avg_first_time /runs + " ms");
+	if (runs > 1)
+	    System.out.println("Threads " + threads + " - Avg without first Run Time = "
+			       + avg_second_time / (runs - 1) + " ms");
     }
   
 }
