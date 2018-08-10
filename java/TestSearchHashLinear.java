@@ -3,14 +3,14 @@ import java.util.Random;
 public class TestSearchHashLinear {
     // configurator
     private static int size = 16;  // size of each hash level
-    private static int depth = 2000000; // number of hash levels
+    private static int depth = 3000000; // number of hash levels
     private static int threads = 4; // 0 - main thread only |  n - n threads
     private static int n_datasets = 4; // must be equal to threads if threads > 1
     private static int runs = 5;
     private static int second_touch = size - 1;
     private static int dataset[][];
 
-    private static int touches = 2; // 1 - one touch | 2 - two touches
+    private static int touches = 1; // 1 - one touch | 2 - two touches
     
     public static void main(final String[] args) {
 	System.out.println("creating dataset");
