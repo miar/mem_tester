@@ -2,17 +2,22 @@ import java.util.Random;
 
 public class TestSearchHashLinear {
     // configurator
-    private static int size = 16;  // size of each hash level
-    private static int depth = 3000000; // number of hash levels
-    private static int threads = 4; // 0 - main thread only |  n - n threads
-    private static int n_datasets = 4; // must be equal to threads if threads > 1
-    private static int runs = 5;
+    private static int size = 64;  // size of each hash level
+    private static int depth = 300000;//4000000; // number of hash levels
+    private static int threads = 24; // 0 - main thread only |  n - n threads
+    private static int n_datasets = 24; // must be equal to threads if threads > 1
+    private static int runs = 10;
     private static int second_touch = size - 1;
     private static int dataset[][];
 
     private static int touches = 1; // 1 - one touch | 2 - two touches
     
     public static void main(final String[] args) {
+	if (threads != n_datasets) {
+	    System.out.println("threads != n_datasets");
+	    System.exit(1);
+	}
+
 	System.out.println("creating dataset");
 	createDataset();
 	
@@ -123,7 +128,7 @@ public class TestSearchHashLinear {
 			}
 		    });	   
 		
-	    } else {
+	    } else /* touches > 1 */ {
 		thr_arr[0] = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -131,7 +136,7 @@ public class TestSearchHashLinear {
 			}
 		    });				
 	    }	    
-	} else {
+	} else /* threads > 1 */ {
 	    if (touches == 1) {
 		for (int t = 0; t < threads; t++) {
 		    final int tid = t;
@@ -142,7 +147,7 @@ public class TestSearchHashLinear {
 			    }
 			});
 		}
-	    } else {
+	    } else /* touches > 1 */{
 		for (int t = 0; t < threads; t++) {
 		    final int tid = t;
 		    thr_arr[t] = new Thread(new Runnable() {
@@ -198,6 +203,7 @@ public class TestSearchHashLinear {
 	    avg_first_time += time;
 	    avg_second_time += time;
 	}
+	
 
 	System.out.println("Threads " + threads + " - First Run Time = " + first_time + " ms");
 	System.out.println("Threads " + threads + " - Avg with First Run Time = " 
@@ -205,10 +211,10 @@ public class TestSearchHashLinear {
 	if (runs > 1)
 	    System.out.println("Threads " + threads + " - Avg without first Run Time = "
 			       + avg_second_time / (runs - 1) + " ms");
-
+	
 	// run single thread
 	if (touches == 1)
-	    runSingleThreadOneTouch(hash, 0);
+	    runSingleThreadOneTouch(hash, 0 );
 	else
 	    runSingleThreadTwoTouch(hash, 0);	
 

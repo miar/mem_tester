@@ -21,6 +21,7 @@ public class HashLinear {
     }
 
     void check_entry_one_touch(int ds, int dataset[][]) {
+	//System.out.println("one_touch");
 	Object[] curr_hash = root;	
 	for (int d = 0; d < depth; d++) {
 	    int i = dataset[ds][d];
