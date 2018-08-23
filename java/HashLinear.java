@@ -6,6 +6,7 @@ public class HashLinear {
     private static Object[] root;
 
     HashLinear(int size, int depth) {
+	
 	this.root = new Object[size];
 	this.size = size;
 	this.depth = depth;

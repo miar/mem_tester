@@ -2,7 +2,7 @@ import java.util.Random;
 
 public class TestSearchHashLinear {
     // configurator
-    private static int size = 64;  // size of each hash level
+    private static int size = 16;  // size of each hash level
     private static int depth = 300000;//4000000; // number of hash levels
     private static int threads = 24; // 0 - main thread only |  n - n threads
     private static int n_datasets = 24; // must be equal to threads if threads > 1
